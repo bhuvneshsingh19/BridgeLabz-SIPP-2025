@@ -1,6 +1,4 @@
-package Arrays;
-
-public class MultiplicationTable {
+public class multiplicationTable {
         public static void main(String[] args) {
             // Get the number for which to print the multiplication table
             int number = 9;

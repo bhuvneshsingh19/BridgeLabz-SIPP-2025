@@ -11,4 +11,3 @@ public class RocketCountdownForLoop {
         System.out.println("Liftoff!"); // Prints liftoff
     }
 }
-50
