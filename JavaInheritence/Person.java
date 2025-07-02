@@ -1,4 +1,4 @@
-interface Worker {
+interface Worker{
     void performDuties();
 }
 

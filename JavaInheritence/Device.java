@@ -1,4 +1,4 @@
-public class Device {
+public class Device{
     String deviceId;
     String status;
 

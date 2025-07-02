@@ -1,4 +1,4 @@
-interface Refuelable {
+interface Refuelable{
     void refuel();
 }
 
