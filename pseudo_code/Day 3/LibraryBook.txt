@@ -1,0 +1,41 @@
+// Book.java (Data class)
+CLASS Book {
+    STRING title
+    INT publicationYear
+    FLOAT rating
+}
+
+// Library.java
+CLASS Library {
+    LIST<Book> books = NEW ArrayList<Book>()
+
+    METHOD addBook(Book book) {
+        this.books.add(book)
+    }
+
+    // Method using streams to filter books
+    METHOD getHighlyRatedNewBooks() RETURNS LIST<Book> {
+        // Create a stream from the list of books
+        RETURN this.books.stream()
+            // Filter 1: Check if publication year is after 2015
+            .filter(book -> book.publicationYear > 2015)
+            // Filter 2: Check if rating is greater than 4.5
+            .filter(book -> book.rating > 4.5)
+            // Collect the filtered books into a new list
+            .collect(Collectors.toList())
+    }
+}
+
+// Main.java (Example Usage)
+MAIN {
+    Library myLibrary = NEW Library()
+    myLibrary.addBook(NEW Book("Old Classic", 2010, 4.8))
+    myLibrary.addBook(NEW Book("New Bestseller", 2018, 4.9))
+    myLibrary.addBook(NEW Book("Fantasy Epic", 2017, 4.4))
+
+    LIST<Book> filteredBooks = myLibrary.getHighlyRatedNewBooks()
+
+    FOR book IN filteredBooks
+        PRINT "Found: " + book.title + " (Year: " + book.publicationYear + ", Rating: " + book.rating + ")"
+    END FOR
+}

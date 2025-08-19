@@ -1,0 +1,60 @@
+// Patient.java (Data class)
+CLASS Patient {
+    STRING patientId
+    STRING name
+    STRING condition
+}
+
+// PatientManager.java
+CLASS PatientManager {
+    // Map patient ID to patient object
+    HashMap<STRING, Patient> records = NEW HashMap<STRING, Patient>()
+
+    METHOD addRecord(Patient patient) {
+        this.records.put(patient.patientId, patient)
+        PRINT "Record for " + patient.name + " added."
+    }
+
+    METHOD getRecord(STRING patientId) RETURNS Patient {
+        IF this.records.containsKey(patientId) THEN
+            RETURN this.records.get(patientId)
+        ELSE
+            PRINT "Patient not found."
+            RETURN null
+        END IF
+    }
+
+    METHOD updateRecord(STRING patientId, STRING newCondition) {
+        IF this.records.containsKey(patientId) THEN
+            Patient patient = this.records.get(patientId)
+            patient.condition = newCondition
+            PRINT "Record for " + patient.name + " updated."
+        ELSE
+            PRINT "Patient not found."
+        END IF
+    }
+
+    METHOD deleteRecord(STRING patientId) {
+        IF this.records.containsKey(patientId) THEN
+            this.records.remove(patientId)
+            PRINT "Record for " + patientId + " deleted."
+        ELSE
+            PRINT "Patient not found."
+        END IF
+    }
+}
+
+// Main.java (Example Usage)
+MAIN {
+    PatientManager manager = NEW PatientManager()
+    Patient p1 = NEW Patient("P001", "Alice", "Stable")
+    manager.addRecord(p1)
+
+    Patient retrieved = manager.getRecord("P001")
+    IF retrieved != null THEN
+        PRINT "Retrieved: " + retrieved.name + ", " + retrieved.condition
+    END IF
+
+    manager.updateRecord("P001", "Critical")
+    manager.deleteRecord("P001")
+}

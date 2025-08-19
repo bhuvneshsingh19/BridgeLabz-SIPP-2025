@@ -1,0 +1,71 @@
+// Searchable.java (Interface)
+INTERFACE Searchable {
+    BOOLEAN search(STRING keyword)
+}
+
+// Printable.java (Interface)
+INTERFACE Printable {
+    VOID printReport()
+}
+
+// PatientRecord.java
+CLASS PatientRecord IMPLEMENTS Searchable, Printable {
+    STRING patientId
+    STRING patientName
+    STRING symptoms
+    // ... other attributes
+
+    PatientRecord(STRING id, STRING name, STRING symptoms) {
+        this.patientId = id
+        this.patientName = name
+        this.symptoms = symptoms
+    }
+
+    // Implementation of Searchable interface
+    OVERRIDE METHOD search(STRING keyword) RETURNS BOOLEAN {
+        RETURN this.patientName.contains(keyword) OR this.symptoms.contains(keyword)
+    }
+
+    // Implementation of Printable interface
+    OVERRIDE METHOD printReport() {
+        PRINT "--- Patient Record ---"
+        PRINT "ID: " + this.patientId
+        PRINT "Name: " + this.patientName
+        PRINT "Symptoms: " + this.symptoms
+    }
+}
+
+// MedicalManager.java (Example of Polymorphism)
+CLASS MedicalManager {
+    LIST<Printable> printableReports = NEW ArrayList<Printable>()
+    LIST<Searchable> searchableRecords = NEW ArrayList<Searchable>()
+
+    METHOD addRecord(PatientRecord record) {
+        this.printableReports.add(record)
+        this.searchableRecords.add(record)
+    }
+
+    METHOD printAllReports() {
+        FOR report IN this.printableReports
+            report.printReport()
+        END FOR
+    }
+
+    METHOD findRecord(STRING keyword) {
+        FOR record IN this.searchableRecords
+            IF record.search(keyword) THEN
+                PRINT "Found a matching record."
+            END IF
+        END FOR
+    }
+}
+
+// Main.java (Example Usage)
+MAIN {
+    MedicalManager manager = NEW MedicalManager()
+    manager.addRecord(NEW PatientRecord("P001", "Alice Smith", "Fever, Cough"))
+    manager.addRecord(NEW PatientRecord("P002", "Bob Johnson", "Headache"))
+
+    manager.printAllReports()
+    manager.findRecord("Fever") // This will find Alice's record
+}

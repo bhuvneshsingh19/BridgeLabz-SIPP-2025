@@ -1,0 +1,70 @@
+// Customer.java
+CLASS Customer {
+    STRING name
+    STRING address
+}
+
+// Restaurant.java
+CLASS Restaurant {
+    STRING name
+    STRING cuisine
+}
+
+// DeliveryBoy.java
+CLASS DeliveryBoy {
+    STRING name
+    STRING vehicleType
+}
+
+// Order.java (Uses Composition)
+CLASS Order {
+    Customer customer
+    Restaurant restaurant
+    DeliveryBoy deliveryBoy
+    LIST<STRING> items
+    FLOAT totalAmount
+
+    // Constructor to initialize an order with its components
+    Order(Customer customer, Restaurant restaurant, LIST<STRING> items, FLOAT totalAmount) {
+        this.customer = customer
+        this.restaurant = restaurant
+        this.items = items
+        this.totalAmount = totalAmount
+    }
+
+    // Method to assign a delivery boy
+    METHOD assignDeliveryBoy(DeliveryBoy boy) {
+        this.deliveryBoy = boy
+        PRINT "Order assigned to " + boy.name
+    }
+
+    // Method to display order details
+    METHOD displayOrderDetails() {
+        PRINT "--- Order Details ---"
+        PRINT "Customer: " + this.customer.name
+        PRINT "Restaurant: " + this.restaurant.name
+        PRINT "Items: " + this.items
+        PRINT "Total: $" + this.totalAmount
+        IF this.deliveryBoy != null THEN
+            PRINT "Delivery Boy: " + this.deliveryBoy.name
+        ELSE
+            PRINT "Delivery not yet assigned."
+        END IF
+    }
+}
+
+// Main.java (Example Usage)
+MAIN {
+    Customer cust = NEW Customer("Alice", "123 Main St")
+    Restaurant rest = NEW Restaurant("Italiano", "Italian")
+    LIST<STRING> food = NEW ArrayList<STRING>()
+    food.add("Pizza")
+    food.add("Pasta")
+
+    Order myOrder = NEW Order(cust, rest, food, 35.50)
+    myOrder.displayOrderDetails()
+
+    DeliveryBoy boy = NEW DeliveryBoy("Bob", "Motorcycle")
+    myOrder.assignDeliveryBoy(boy)
+    myOrder.displayOrderDetails()
+}

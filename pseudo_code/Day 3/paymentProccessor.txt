@@ -1,0 +1,50 @@
+// PaymentType Interfaces
+INTERFACE UPI {}
+INTERFACE Card {}
+INTERFACE NetBanking {}
+
+// Specific Payment Classes
+CLASS UPIPayment IMPLEMENTS UPI {
+    STRING upiId
+}
+CLASS CardPayment IMPLEMENTS Card {
+    STRING cardNumber
+}
+CLASS NetBankingPayment IMPLEMENTS NetBanking {
+    STRING bankName
+}
+
+// Transaction.java (Generic Class)
+CLASS Transaction<T> {
+    STRING transactionId
+    FLOAT amount
+    T paymentMethod // T is the generic type for the payment method
+
+    Transaction(STRING id, FLOAT amount, T method) {
+        this.transactionId = id
+        this.amount = amount
+        this.paymentMethod = method
+    }
+
+    METHOD process() {
+        // Logic to process the transaction based on the type
+        PRINT "Processing transaction " + this.transactionId + " for $" + this.amount
+        IF this.paymentMethod INSTANCEOF UPIPayment THEN
+            PRINT "Using UPI ID: " + ((UPIPayment)this.paymentMethod).upiId
+        ELSE IF this.paymentMethod INSTANCEOF CardPayment THEN
+            PRINT "Using Card: " + ((CardPayment)this.paymentMethod).cardNumber
+        ELSE
+            PRINT "Using NetBanking from: " + ((NetBankingPayment)this.paymentMethod).bankName
+        END IF
+    }
+}
+
+// Main.java (Example Usage)
+MAIN {
+    // Creating transactions for different payment types
+    Transaction<UPIPayment> upiTransaction = NEW Transaction<UPIPayment>("T101", 50.00, NEW UPIPayment("user@bank"))
+    Transaction<CardPayment> cardTransaction = NEW Transaction<CardPayment>("T102", 120.75, NEW CardPayment("xxxx-xxxx-xxxx-1234"))
+    
+    upiTransaction.process()
+    cardTransaction.process()
+}

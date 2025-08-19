@@ -1,0 +1,57 @@
+// MazeSolver.java
+CLASS MazeSolver {
+    INT[][] maze // 0: path, 1: wall
+    BOOLEAN[][] visited
+
+    MazeSolver(INT[][] maze) {
+        this.maze = maze
+        this.visited = NEW BOOLEAN[maze.length][maze[0].length]
+    }
+
+    // Main method to start the solve process
+    METHOD solve(INT startX, INT startY, INT endX, INT endY) RETURNS BOOLEAN {
+        RETURN solveRecursively(startX, startY, endX, endY)
+    }
+
+    // Recursive backtracking method
+    METHOD solveRecursively(INT x, INT y, INT endX, INT endY) RETURNS BOOLEAN {
+        // Base cases
+        IF x < 0 OR y < 0 OR x >= maze.length OR y >= maze[0].length THEN
+            RETURN FALSE // Out of bounds
+        END IF
+        IF maze[x][y] == 1 OR visited[x][y] THEN
+            RETURN FALSE // Wall or already visited
+        END IF
+        IF x == endX AND y == endY THEN
+            PRINT "Found a path to the exit!"
+            visited[x][y] = TRUE
+            RETURN TRUE // Found the exit
+        END IF
+        
+        // Mark current cell as visited
+        visited[x][y] = TRUE
+        
+        // Try all four directions (right, down, left, up)
+        IF solveRecursively(x, y + 1, endX, endY) THEN RETURN TRUE END IF // Right
+        IF solveRecursively(x + 1, y, endX, endY) THEN RETURN TRUE END IF // Down
+        IF solveRecursively(x, y - 1, endX, endY) THEN RETURN TRUE END IF // Left
+        IF solveRecursively(x - 1, y, endX, endY) THEN RETURN TRUE END IF // Up
+
+        // Backtrack: if no path found, un-mark this cell
+        visited[x][y] = FALSE
+        RETURN FALSE
+    }
+}
+
+// Main.java (Example Usage)
+MAIN {
+    INT[][] myMaze = {
+        {0, 1, 0, 0, 0},
+        {0, 1, 0, 1, 0},
+        {0, 0, 0, 1, 0},
+        {1, 1, 0, 0, 0},
+        {0, 0, 0, 1, 0}
+    }
+    MazeSolver solver = NEW MazeSolver(myMaze)
+    solver.solve(0, 0, 4, 4)
+}
