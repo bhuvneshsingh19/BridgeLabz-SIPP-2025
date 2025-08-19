@@ -1,0 +1,41 @@
+// CallCenter.java
+class CallCenter {
+    // Use two queues: one for emergency, one for normal
+    Queue<STRING> emergencyQueue = NEW Queue<STRING>()
+    Queue<STRING> normalQueue = NEW Queue<STRING>()
+
+    // Method to add a new caller to the queue
+    METHOD receiveCall(STRING customerName, STRING priority) {
+        IF priority == "emergency" THEN
+            this.emergencyQueue.enqueue(customerName)
+            PRINT customerName + " added to emergency queue."
+        ELSE
+            this.normalQueue.enqueue(customerName)
+            PRINT customerName + " added to normal queue."
+        END IF
+    }
+
+    // Method to serve the next customer
+    METHOD serveNextCustomer() {
+        IF this.emergencyQueue.isEmpty() == FALSE THEN
+            STRING nextCustomer = this.emergencyQueue.dequeue()
+            PRINT "Serving emergency call from " + nextCustomer
+        ELSE IF this.normalQueue.isEmpty() == FALSE THEN
+            STRING nextCustomer = this.normalQueue.dequeue()
+            PRINT "Serving normal call from " + nextCustomer
+        ELSE
+            PRINT "No calls in queue."
+        END IF
+    }
+}
+
+// Main.java (Example Usage)
+MAIN {
+    CallCenter center = NEW CallCenter()
+    center.receiveCall("John", "normal")
+    center.receiveCall("Emergency Room", "emergency")
+    center.receiveCall("Sarah", "normal")
+
+    center.serveNextCustomer() // Serves Emergency Room first
+    center.serveNextCustomer() // Serves John second
+}

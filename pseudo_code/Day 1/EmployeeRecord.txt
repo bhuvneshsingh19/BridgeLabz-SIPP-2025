@@ -1,0 +1,49 @@
+// Employee.java (A simple data class)
+class Employee {
+    STRING name
+    STRING department
+    INTEGER employeeId
+
+    Employee(STRING name, STRING department, INTEGER employeeId) {
+        this.name = name
+        this.department = department
+        this.employeeId = employeeId
+    }
+
+    // Getter methods
+    METHOD getName() returns STRING { return this.name }
+    METHOD getDepartment() returns STRING { return this.department }
+}
+
+// EmployeeRecords.java
+class EmployeeRecords {
+    // Use an ArrayList to store Employee objects
+    ArrayList<Employee> employeeList = NEW ArrayList<Employee>()
+
+    // Method to add an employee
+    METHOD addEmployee(Employee emp) {
+        this.employeeList.add(emp)
+    }
+
+    // Method to filter and display employees by department
+    METHOD filterEmployeesByDepartment(STRING targetDepartment) {
+        PRINT "Employees in " + targetDepartment + ":"
+        
+        // Use a stream to filter employees
+        // Filter the list where the employee's department matches the target
+        // For each matching employee, print their name
+        this.employeeList.stream()
+            .filter(emp -> emp.getDepartment().equals(targetDepartment))
+            .forEach(emp -> PRINT emp.getName())
+    }
+}
+
+// Main.java (Example Usage)
+MAIN {
+    EmployeeRecords records = NEW EmployeeRecords()
+    records.addEmployee(NEW Employee("Alice", "HR", 101))
+    records.addEmployee(NEW Employee("Bob", "Engineering", 102))
+    records.addEmployee(NEW Employee("Charlie", "HR", 103))
+
+    records.filterEmployeesByDepartment("HR") // Prints Alice and Charlie
+}

@@ -1,0 +1,45 @@
+// Member.java
+class Member {
+    // Attributes
+    STRING name
+    STRING memberId
+    DATE membershipDate
+    INT durationInMonths
+
+    // Constructor to initialize a Member
+    Member(STRING name, STRING memberId, DATE membershipDate, INT durationInMonths) {
+        this.name = name
+        this.memberId = memberId
+        this.membershipDate = membershipDate
+        this.durationInMonths = durationInMonths
+    }
+
+    // Method to check if membership is valid
+    METHOD isMembershipValid() returns BOOLEAN {
+        // Calculate the expiry date
+        DATE expiryDate = this.membershipDate + this.durationInMonths.asMonths()
+        
+        // Compare expiry date with current date
+        IF currentDate < expiryDate THEN
+            RETURN TRUE
+        ELSE
+            RETURN FALSE
+        END IF
+    }
+
+    // Method to get membership details
+    METHOD getDetails() {
+        PRINT "Name: " + this.name
+        PRINT "ID: " + this.memberId
+        PRINT "Membership Valid: " + this.isMembershipValid()
+    }
+}
+
+// Main.java (Example Usage)
+MAIN {
+    // Create a new member with a 12-month membership
+    Member newMember = NEW Member("Alice", "M101", "2024-01-15", 12)
+
+    // Check membership validity
+    PRINT "Is Alice's membership valid? " + newMember.isMembershipValid()
+}

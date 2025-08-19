@@ -1,0 +1,42 @@
+// StudentScores.java
+class StudentScores {
+    // Use a HashMap to store student scores
+    HashMap<STRING, INTEGER> scores = NEW HashMap<STRING, INTEGER>()
+
+    // Method to add a score
+    METHOD addScore(STRING name, INTEGER score) {
+        this.scores.put(name, score)
+    }
+
+    // Method to find and display the highest scorer
+    METHOD displayHighestScorer() {
+        IF this.scores.isEmpty() THEN
+            PRINT "No scores to display."
+            RETURN
+        END IF
+        
+        // Use a stream to find the highest score
+        // Stream the entries
+        // Find the maximum entry based on the value (score)
+        // Use a custom comparator to compare values
+        // Get the key (name) of the highest scorer
+        STRING highestScorer = this.scores.entrySet().stream()
+            .max((entry1, entry2) -> entry1.getValue().compareTo(entry2.getValue()))
+            .get().getKey()
+        
+        // Get the highest score
+        INTEGER highestScore = this.scores.get(highestScorer)
+
+        PRINT "The highest scorer is: " + highestScorer + " with a score of " + highestScore
+    }
+}
+
+// Main.java (Example Usage)
+MAIN {
+    StudentScores scoresSystem = NEW StudentScores()
+    scoresSystem.addScore("Alice", 85)
+    scoresSystem.addScore("Bob", 92)
+    scoresSystem.addScore("Charlie", 78)
+
+    scoresSystem.displayHighestScorer() // Prints Bob with 92
+}

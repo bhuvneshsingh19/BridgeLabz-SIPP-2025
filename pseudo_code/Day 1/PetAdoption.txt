@@ -1,0 +1,76 @@
+// Pet.java
+class Pet {
+    // Attributes
+    STRING name
+    STRING species
+    INT age
+
+    // Constructor to initialize Pet
+    Pet(STRING name, STRING species, INT age) {
+        this.name = name
+        this.species = species
+        this.age = age
+    }
+
+    // Method to display pet info
+    METHOD displayInfo() {
+        PRINT "Name: " + this.name
+        PRINT "Species: " + this.species
+        PRINT "Age: " + this.age
+    }
+}
+
+// Dog.java
+class Dog extends Pet {
+    STRING breed
+
+    // Constructor for Dog
+    Dog(STRING name, INT age, STRING breed) {
+        // Call the parent class constructor
+        SUPER(name, "Dog", age)
+        this.breed = breed
+    }
+
+    // Override displayInfo to add breed
+    OVERRIDE METHOD displayInfo() {
+        SUPER.displayInfo()
+        PRINT "Breed: " + this.breed
+    }
+}
+
+// Cat.java
+class Cat extends Pet {
+    BOOLEAN isIndoor
+
+    // Constructor for Cat
+    Cat(STRING name, INT age, BOOLEAN isIndoor) {
+        // Call the parent class constructor
+        SUPER(name, "Cat", age)
+        this.isIndoor = isIndoor
+    }
+}
+
+// Bird.java
+class Bird extends Pet {
+    BOOLEAN canFly
+
+    // Constructor for Bird
+    Bird(STRING name, INT age, BOOLEAN canFly) {
+        // Call the parent class constructor
+        SUPER(name, "Bird", age)
+        this.canFly = canFly
+    }
+}
+
+// Main.java (Example Usage)
+MAIN {
+    // Create new pets
+    Dog myDog = NEW Dog("Buddy", 3, "Golden Retriever")
+    Cat myCat = NEW Cat("Whiskers", 5, TRUE)
+    Bird myBird = NEW Bird("Rio", 2, TRUE)
+
+    // Display info for each pet
+    myDog.displayInfo()
+    myCat.displayInfo()
+    myBird.displayInfo()
+}

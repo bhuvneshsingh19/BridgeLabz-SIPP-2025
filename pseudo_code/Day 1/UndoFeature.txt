@@ -1,0 +1,39 @@
+// TextEditor.java
+class TextEditor {
+    // Use a Stack to store text states
+    Stack<STRING> undoStack
+
+    // Constructor
+    TextEditor() {
+        this.undoStack = NEW Stack<STRING>()
+        // Initialize with an empty document
+        this.undoStack.push("")
+    }
+
+    // Method to add new text (save state)
+    METHOD type(STRING newText) {
+        this.undoStack.push(newText)
+        PRINT "Current text: " + this.undoStack.peek()
+    }
+
+    // Method to undo the last operation
+    METHOD undo() {
+        // Check if there are states to revert to
+        IF this.undoStack.size() > 1 THEN
+            this.undoStack.pop() // Remove the last state
+            PRINT "Undo successful. Current text: " + this.undoStack.peek()
+        ELSE
+            PRINT "Cannot undo. No previous states."
+        END IF
+    }
+}
+
+// Main.java (Example Usage)
+MAIN {
+    TextEditor editor = NEW TextEditor()
+    editor.type("Hello")
+    editor.type("Hello World")
+    editor.undo() // This will revert to "Hello"
+    editor.undo() // This will revert to ""
+    editor.undo() // This will print "Cannot undo."
+}
