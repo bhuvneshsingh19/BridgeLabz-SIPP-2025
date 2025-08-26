@@ -1,0 +1,119 @@
+// TrieNode.java
+Class TrieNode {
+    Map<Character, TrieNode> children;
+    Boolean isEndOfWord;
+    int popularityScore;
+
+    Constructor() {
+        children = new HashMap<Character, TrieNode>();
+        isEndOfWord = false;
+        popularityScore = 0;
+    }
+}
+
+// Trie.java
+Class Trie {
+    TrieNode root;
+
+    Constructor() {
+        root = new TrieNode();
+    }
+
+    Method insert(String word) {
+        TrieNode current = root;
+        For each char c in word {
+            current.children.putIfAbsent(c, new TrieNode());
+            current = current.children.get(c);
+        }
+        current.isEndOfWord = true;
+    }
+
+    Method insertWithPopularity(String word, int score) {
+        insert(word); // Insert the word first
+        TrieNode current = root;
+        For each char c in word {
+            current = current.children.get(c);
+        }
+        current.popularityScore = current.popularityScore + score;
+    }
+
+    Method searchPrefix(String prefix) {
+        TrieNode current = root;
+        For each char c in prefix {
+            If not current.children.containsKey(c) Then
+                Return null; // Prefix not found
+            End If
+            current = current.children.get(c);
+        }
+        Return current; // Return the node at the end of the prefix
+    }
+
+    Method getSuggestions(String prefix) {
+        TrieNode prefixNode = searchPrefix(prefix);
+        List<String> suggestions = new ArrayList<String>();
+        If prefixNode == null Then
+            Return suggestions;
+        End If
+        
+        // Traverse from the prefix node to find all valid words
+        findAllWords(prefixNode, prefix, suggestions);
+        
+        // Sort by popularity (descending)
+        suggestions.sort((a, b) -> {
+            int scoreA = getPopularity(a);
+            int scoreB = getPopularity(b);
+            Return scoreB - scoreA;
+        });
+
+        // Return top N suggestions (e.g., top 3)
+        Return suggestions.subList(0, Math.min(3, suggestions.size()));
+    }
+
+    private Method findAllWords(TrieNode node, String currentWord, List<String> result) {
+        If node.isEndOfWord Then
+            result.add(currentWord);
+        End If
+        
+        For each entry in node.children.entrySet() {
+            findAllWords(entry.getValue(), currentWord + entry.getKey(), result);
+        }
+    }
+
+    private Method getPopularity(String word) {
+        TrieNode current = root;
+        For each char c in word {
+            current = current.children.get(c);
+        }
+        Return current.popularityScore;
+    }
+}
+
+// Main.java
+Class Main {
+    Method main() {
+        Trie trie = new Trie();
+        
+        // Insert initial keywords with popularity
+        trie.insertWithPopularity("pizza hut", 100);
+        trie.insertWithPopularity("pizza point", 80);
+        trie.insertWithPopularity("pita bread", 120);
+        trie.insertWithPopularity("pizzeria", 90);
+
+        // User types "pi"
+        Print "Suggestions for 'pi':"
+        Print trie.getSuggestions("pi");
+
+        // "pita bread" gets more orders, its score increases
+        trie.insertWithPopularity("pita bread", 50); // Simulating more orders
+        Print "\nAfter more orders for 'pita bread':"
+        Print trie.getSuggestions("pi");
+
+        // Add a new restaurant dynamically
+        Print "\nAdding new restaurant 'pineapple cafe'..."
+        trie.insertWithPopularity("pineapple cafe", 75);
+        
+        // New suggestions with "pineapple cafe"
+        Print "Suggestions for 'pi':"
+        Print trie.getSuggestions("pi");
+    }
+}

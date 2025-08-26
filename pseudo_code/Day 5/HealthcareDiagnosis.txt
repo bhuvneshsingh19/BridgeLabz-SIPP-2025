@@ -1,0 +1,71 @@
+// DiagnosisStrategy.java
+Interface DiagnosisStrategy {
+    Method diagnose(List<String> symptoms): returns List<String>
+}
+
+// RuleBasedDiagnosis.java
+Class RuleBasedDiagnosis implements DiagnosisStrategy {
+    Method diagnose(List<String> symptoms) {
+        // Logic to match symptoms with rule-based patterns
+        If symptoms contains "fever" AND "cough" Then
+            Return ["Flu", "COVID-19"]
+        Else If symptoms contains "headache" AND "dizziness" Then
+            Return ["Migraine"]
+        End If
+    }
+}
+
+// AIBasedDiagnosis.java
+Class AIBasedDiagnosis implements DiagnosisStrategy {
+    Method diagnose(List<String> symptoms) {
+        // Pseudo-code for calling an AI model API
+        aiModel.predict(symptoms);
+        Return ["Migraine", "Vertigo"]
+    }
+}
+
+// GeneticPatternDiagnosis.java (New Algorithm)
+Class GeneticPatternDiagnosis implements DiagnosisStrategy {
+    Method diagnose(List<String> symptoms) {
+        // New logic for genetic pattern analysis
+        Return ["Genetic Disorder A", "Genetic Disorder B"]
+    }
+}
+
+// DiagnosisContext.java
+Class DiagnosisContext {
+    private DiagnosisStrategy strategy;
+
+    Method setStrategy(DiagnosisStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    Method performDiagnosis(List<String> symptoms) {
+        Return strategy.diagnose(symptoms);
+    }
+}
+
+// Main.java
+Class Main {
+    Method main() {
+        DiagnosisContext engine = new DiagnosisContext();
+
+        // Scenario 1: General Medicine - Rule-based
+        engine.setStrategy(new RuleBasedDiagnosis());
+        List<String> symptomsGeneral = ["fever", "cough", "fatigue"];
+        List<String> resultGeneral = engine.performDiagnosis(symptomsGeneral);
+        Print "General Medicine Diagnosis: " + resultGeneral
+
+        // Scenario 2: Neurology - AI-based
+        engine.setStrategy(new AIBasedDiagnosis());
+        List<String> symptomsNeuro = ["headache", "dizziness", "nausea"];
+        List<String> resultNeuro = engine.performDiagnosis(symptomsNeuro);
+        Print "Neurology Diagnosis: " + resultNeuro
+
+        // Scenario 3: Adding a new algorithm without changing existing code
+        engine.setStrategy(new GeneticPatternDiagnosis());
+        List<String> symptomsGenetics = ["DNA A", "Protein B"];
+        List<String> resultGenetics = engine.performDiagnosis(symptomsGenetics);
+        Print "Genetics Diagnosis: " + resultGenetics
+    }
+}

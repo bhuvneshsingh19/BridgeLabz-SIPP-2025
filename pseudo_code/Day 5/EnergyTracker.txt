@@ -1,0 +1,61 @@
+// EnergyTracker.java
+Class EnergyTracker {
+    // Map<Zone, Map<Day, List<Reading>>>
+    Map<String, Map<String, List<Integer>>> consumptionData;
+
+    Constructor() {
+        consumptionData = new HashMap<>();
+    }
+
+    Method addReading(String zone, String day, Integer reading) {
+        consumptionData.putIfAbsent(zone, new HashMap<>());
+        Map<String, List<Integer>> zoneData = consumptionData.get(zone);
+        zoneData.putIfAbsent(day, new ArrayList<>());
+        zoneData.get(day).add(reading);
+    }
+
+    Method analyzePeakUsage() {
+        // Using nested streams to traverse and find peak values
+        Map<String, Map<String, Integer>> peakUsageReport = consumptionData.entrySet().stream()
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                zoneEntry -> zoneEntry.getValue().entrySet().stream()
+                    .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        dayEntry -> dayEntry.getValue().stream()
+                            .max(Integer::compare)
+                            .orElse(0)
+                    ))
+            ));
+        
+        Print "Peak Usage Report:"
+        peakUsageReport.forEach((zone, dayPeaks) -> {
+            Print "Zone: " + zone
+            dayPeaks.forEach((day, peakValue) -> {
+                Print "\tDay: " + day + " -> Peak: " + peakValue + "kW"
+            });
+        });
+    }
+}
+
+// Main.java
+Class Main {
+    Method main() {
+        EnergyTracker tracker = new EnergyTracker();
+
+        // Add sample data
+        tracker.addReading("Zone-A", "2025-08-01", 120);
+        tracker.addReading("Zone-A", "2025-08-01", 90);
+        tracker.addReading("Zone-A", "2025-08-01", 200);
+        tracker.addReading("Zone-A", "2025-08-01", 150);
+
+        tracker.addReading("Zone-B", "2025-08-01", 300);
+        tracker.addReading("Zone-B", "2025-08-01", 350);
+        tracker.addReading("Zone-B", "2025-08-01", 250);
+        
+        tracker.addReading("Zone-A", "2025-08-02", 180);
+        tracker.addReading("Zone-A", "2025-08-02", 210);
+
+        tracker.analyzePeakUsage();
+    }
+}

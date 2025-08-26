@@ -1,0 +1,141 @@
+// TaxCalculator.java
+Interface TaxCalculator {
+    Method calculateTax(double price): returns double
+}
+
+// FoodTax.java
+Class FoodTax implements TaxCalculator {
+    Method calculateTax(double price) {
+        Return price * 0.05 // 5% GST
+    }
+}
+
+// BeverageTax.java
+Class BeverageTax implements TaxCalculator {
+    Method calculateTax(double price) {
+        Return price * 0.12 // 12% GST
+    }
+}
+
+// ImportedTax.java
+Class ImportedTax implements TaxCalculator {
+    Method calculateTax(double price) {
+        // 5% GST + 15% Customs Duty
+        Return price * 0.05 + price * 0.15
+    }
+}
+
+// DiscountPolicy.java
+Interface DiscountPolicy {
+    Method applyDiscount(double totalBill): returns double
+}
+
+// NoDiscount.java
+Class NoDiscount implements DiscountPolicy {
+    Method applyDiscount(double totalBill) {
+        Return totalBill
+    }
+}
+
+// FlatDiscount.java
+Class FlatDiscount implements DiscountPolicy {
+    Method applyDiscount(double totalBill) {
+        Return totalBill - 100 // Flat ₹100 off
+    }
+}
+
+// PercentageDiscount.java
+Class PercentageDiscount implements DiscountPolicy {
+    Method applyDiscount(double totalBill) {
+        Return totalBill * 0.90 // 10% off
+    }
+}
+
+// LuxuryTax.java (New Tax Type)
+Class LuxuryTax implements TaxCalculator {
+    Method calculateTax(double price) {
+        Return price * 0.20 // 20% Luxury Tax
+    }
+}
+
+// BuyOneGetOne.java (New Discount Type)
+Class BuyOneGetOne implements DiscountPolicy {
+    Method applyDiscount(double totalBill) {
+        // Complex logic for BOGO; for simplicity, let's assume it halves the bill
+        Return totalBill / 2
+    }
+}
+
+// MenuItem.java
+Class MenuItem {
+    String name;
+    double price;
+    TaxCalculator taxStrategy;
+
+    Method setTaxStrategy(TaxCalculator taxStrategy) {
+        this.taxStrategy = taxStrategy;
+    }
+
+    Method calculateTotalItemCost() {
+        Return this.price + this.taxStrategy.calculateTax(this.price);
+    }
+}
+
+// BillingSystem.java
+Class BillingSystem {
+    private DiscountPolicy discountPolicy;
+    private List<MenuItem> items;
+
+    Method setDiscountPolicy(DiscountPolicy discountPolicy) {
+        this.discountPolicy = discountPolicy;
+    }
+
+    Method addItem(MenuItem item) {
+        items.add(item);
+    }
+
+    Method calculateFinalBill() {
+        double subtotal = 0;
+        For each item in items {
+            subtotal = subtotal + item.calculateTotalItemCost();
+        }
+        Return discountPolicy.applyDiscount(subtotal);
+    }
+}
+
+// Main.java
+Class Main {
+    Method main() {
+        BillingSystem posSystem = new BillingSystem();
+
+        // Scenario 1
+        MenuItem paneerTikka = new MenuItem("Paneer Tikka", 250);
+        paneerTikka.setTaxStrategy(new FoodTax());
+        posSystem.addItem(paneerTikka);
+
+        MenuItem coke = new MenuItem("Coke", 50);
+        coke.setTaxStrategy(new BeverageTax());
+        posSystem.addItem(coke);
+
+        MenuItem importedCheese = new MenuItem("Imported Cheese", 400);
+        importedCheese.setTaxStrategy(new ImportedTax());
+        posSystem.addItem(importedCheese);
+
+        posSystem.setDiscountPolicy(new PercentageDiscount());
+        double finalBill = posSystem.calculateFinalBill();
+        Print "Final Bill with 10% off: " + finalBill
+
+        // Scenario 2 & 3: Add new policies dynamically
+        // New discount scheme
+        posSystem.setDiscountPolicy(new BuyOneGetOne());
+        finalBill = posSystem.calculateFinalBill();
+        Print "Final Bill with BOGO: " + finalBill
+
+        // New tax type for an item
+        MenuItem premiumWine = new MenuItem("Premium Wine", 1000);
+        premiumWine.setTaxStrategy(new LuxuryTax());
+        posSystem.addItem(premiumWine);
+        finalBill = posSystem.calculateFinalBill();
+        Print "Final Bill with new Luxury Tax: " + finalBill
+    }
+}

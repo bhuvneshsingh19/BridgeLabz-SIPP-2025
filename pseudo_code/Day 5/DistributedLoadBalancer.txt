@@ -1,0 +1,71 @@
+// LoadBalancer.java
+Class LoadBalancer {
+    Queue<String> serverQueue;
+
+    Constructor(List<String> initialServers) {
+        serverQueue = new Queue<String>();
+        For each server in initialServers {
+            serverQueue.enqueue(server);
+        }
+    }
+
+    Method addServer(String newServer) {
+        serverQueue.enqueue(newServer);
+    }
+
+    Method removeServer(String serverToRemove) {
+        Queue<String> tempQueue = new Queue<String>();
+        While not serverQueue.isEmpty() {
+            String server = serverQueue.dequeue();
+            If server != serverToRemove Then
+                tempQueue.enqueue(server);
+            End If
+        }
+        serverQueue = tempQueue;
+    }
+
+    Method assignRequest(String requestId) {
+        If serverQueue.isEmpty() Then
+            Print "No active servers to handle request " + requestId
+            Return
+        End If
+        String server = serverQueue.dequeue();
+        Print "Request " + requestId + " assigned to " + server;
+        serverQueue.enqueue(server); // Move to the back
+    }
+}
+
+// Main.java
+Class Main {
+    Method main() {
+        List<String> initialServers = ["S1", "S2", "S3"];
+        LoadBalancer lb = new LoadBalancer(initialServers);
+        int requestCount = 0;
+
+        // Process initial requests
+        For i from 1 to 3 {
+            requestCount = requestCount + 1;
+            lb.assignRequest("R" + requestCount);
+        }
+        
+        // Dynamic addition of a new server
+        Print "\nAdding new server S4..."
+        lb.addServer("S4");
+
+        // Process more requests with new server
+        For i from 1 to 4 {
+            requestCount = requestCount + 1;
+            lb.assignRequest("R" + requestCount);
+        }
+
+        // Dynamic removal of a server
+        Print "\nRemoving server S2 due to failure..."
+        lb.removeServer("S2");
+
+        // Process requests after removal
+        For i from 1 to 3 {
+            requestCount = requestCount + 1;
+            lb.assignRequest("R" + requestCount);
+        }
+    }
+}

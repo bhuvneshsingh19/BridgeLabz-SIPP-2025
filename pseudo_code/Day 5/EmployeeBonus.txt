@@ -1,0 +1,65 @@
+// Employee.java
+Class Employee {
+    String name;
+    String department;
+    int rating; // 1-5
+    double baseSalary;
+
+    Constructor(name, department, rating, baseSalary) {
+        this.name = name;
+        this.department = department;
+        this.rating = rating;
+        this.baseSalary = baseSalary;
+    }
+}
+
+// Main.java
+Class Main {
+    Method main() {
+        List<Employee> employees = createSampleEmployees();
+
+        Map<String, List<Employee>> employeesByDept = employees.stream()
+            .collect(Collectors.groupingBy(Employee::getDepartment));
+
+        Map<String, Map<String, Double>> bonusReport = new HashMap<>();
+
+        employeesByDept.forEach((department, deptEmployees) -> {
+            double totalSalary = deptEmployees.stream()
+                .mapToDouble(Employee::getBaseSalary)
+                .sum();
+            double bonusPool = totalSalary * 0.10; // 10% of total salary
+            
+            int totalRating = deptEmployees.stream()
+                .mapToInt(Employee::getRating)
+                .sum();
+
+            Map<String, Double> individualBonuses = new HashMap<>();
+            deptEmployees.forEach(emp -> {
+                double bonus = (double) emp.getRating() / totalRating * bonusPool;
+                individualBonuses.put(emp.name, bonus);
+            });
+            
+            bonusReport.put(department, individualBonuses);
+        });
+
+        // Print the final report
+        Print "Department-wise Bonus Distribution Report:"
+        bonusReport.forEach((department, bonuses) -> {
+            Print "Department: " + department
+            bonuses.forEach((name, bonus) -> {
+                Print "\tEmployee: " + name + ", Bonus: ₹" + String.format("%.2f", bonus)
+            });
+        });
+    }
+
+    private Method createSampleEmployees() {
+        // Helper method to generate sample data
+        List<Employee> list = new ArrayList<>();
+        list.add(new Employee("Alice", "IT", 5, 80000));
+        list.add(new Employee("Bob", "IT", 3, 70000));
+        list.add(new Employee("Charlie", "IT", 2, 60000));
+        list.add(new Employee("David", "Finance", 4, 90000));
+        list.add(new Employee("Eve", "Finance", 5, 100000));
+        return list;
+    }
+}
